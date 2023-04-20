@@ -1,20 +1,24 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# 개요
+영화 티켓 예매 키오스크 API 구현 과제입니다.
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+# 기능적 요구사항
+- 극장의 영화 상영 횟수는 하루 3회, 첫 회는 30% 조조할인 대상. 극장 좌석 수는 50개
+- 고객은 티켓 예매를 위해 키오스크 상에서 충전카드를 발급 받음
+- 카드 발급: 고객 본인의 비밀번호 4자리 숫자를 키오스크 상 직접 입력받고, 시스템은 임의의 중복 없는 16자리 카드 번호를 생성하여 할당함
+- 카드 충전: 티켓 예매를 위해 5만원 단위의 현금으로 충전이 필요
+- 카드 잔액: 고객이 키오스크에 카드 삽입 후 비밀번호 입력 시 현재 잔액을 표시
+- 티켓 예매: 고객은 당일 영화 상영 시간과 남은 좌석 중 희망 번호를 선택하여 예매함. 티켓 대금보다 잔액이 적은 경우 충전화면으로 유도. 예매 확인 시 카드 잔액에서 티켓 대금 차감과 극장의 티켓 매출 반영은 동시에 이뤄져야 함
+- 극장 주인은 하루 단위의 총 충전금액과 티켓 매출을 확인하고 싶어함
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+# 기술적 요구사항
+- 사용할 언어는 코틀린, 프레임웍은 스프링 부트
+- 유저의 주요 액션을 별도 로그파일에 로깅
+- 개발 종료 시 프로젝트는 빌드 성공, 실행되어야 함
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+# 규칙
+- 본 과제 개발기간은 총 5일
+- 브랜치 활용은 서버개발팀 브랜치 정책에 따름. 주요 작업별로 Task를 생성 후 각 브랜치 상에 코드 작업 진행함
+- 설계 문서는 주요 API 명세, 테이블 정의서 등을 포함한 자유 양식으로 코딩 전에 작성. 위치는 /docs 하위
+- 개발기간 동안 퇴근 전 데일리 push함
+- 개발기간 마지막 날 마무리된 브랜치는 develop 브랜치로 Merge PR 생성. 마무리 되지 않은 작업 브랜치는 push만 하고 출제자에게 알려주기
+- 본 프로젝트는 가상의 업무 과제이므로 본인 스스로 과제를 설계하고 개발한다.
