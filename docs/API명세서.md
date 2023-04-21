@@ -2,7 +2,7 @@
 
 
 
-1. 고객 비밀번호 등록 api
+1. 고객 등록 api
     - url path: POST /v1/user/new
     - request:
         1. name, string
