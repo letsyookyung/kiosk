@@ -16,18 +16,20 @@ spring:
 
 
   jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.Oracle10gDialect
-        show_sql: true
-        format_sql: true
-        use_sql_comments: true
-        ddl-auto: validate
+    hibernate:
+      dialect: org.hibernate.dialect.MariaDB103Dialect
+      show_sql: true
+      format_sql: true
+      use_sql_comments: true
+      ddl-auto: create #update, validate
 
 logging:
   level:
     root: info
-    com.example: debug
+    com.ivy: debug
+    org.hibernate:
+      type.descriptor.sql: trace #show parameter binding
+      SQL: DEBUG
 
 springdoc:
   swagger-ui:

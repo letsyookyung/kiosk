@@ -26,9 +26,9 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
     kapt("org.mapstruct:mapstruct-processor:1.5.3.Final")
     // jwt
-    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
-    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+//    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+//    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+//    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
     // swagger
     implementation("org.springdoc:springdoc-openapi-ui:1.6.15")
     implementation("org.springdoc:springdoc-openapi-kotlin:1.6.15")

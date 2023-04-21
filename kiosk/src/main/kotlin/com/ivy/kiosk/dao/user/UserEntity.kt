@@ -3,19 +3,16 @@ package com.ivy.kiosk.dao.user
 import javax.persistence.Entity
 import javax.persistence.*
 
-@Table(name = "user")
 @Entity
-class UserEntity constructor (
+@Table(name = "users")
+class UserEntity {
+    @Column(nullable = false, length = 50)
+    var name: String? = null
 
     @Column(nullable = false, length = 50)
-    var name: String,
-
-    @Column(nullable = false, length = 4)
-    var password: Int,
+    var password: String? = null
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
-) {
-
+    var id: Long? = null
 }

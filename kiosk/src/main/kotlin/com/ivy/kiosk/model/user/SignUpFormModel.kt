@@ -4,7 +4,5 @@ import javax.validation.constraints.Size
 
 data class SignUpFormModel(
     val name: String,
-
-    @field:Size(max = 4, min = 4)
-    val password: Int,
+    val password: String,
 )
