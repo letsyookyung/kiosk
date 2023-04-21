@@ -70,8 +70,8 @@
             - 입력한 seats가 빈자리가 아닌 경우 -> 400
 
 
-7. 극장 주인 일일 매출 현황 api
-    - url path: GET /v1/owner/daily-sales/{date}
+7. 극장 매니저 일일 매출 현황 api
+    - url path: GET /v1/manager/daily-sales/{date}
     - request:
         1. date, Date
     - response:
