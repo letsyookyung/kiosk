@@ -5,8 +5,8 @@
 1. 고객 등록 api
     - url path: POST /v1/user/new
     - request:
-        1. name, string
-        2. password, Int (4자리)
+        1. name, String
+        2. password, String (4자리)
     - response:
         1. 없음
 
@@ -14,7 +14,7 @@
 2. 고객 카드 발급 api
     - url path: POST /v1/user/card
     - request:
-        1. password, Int (4자리)
+        1. password, String (4자리)
     - response:
         1. 성공 (200)
             - cardNumber, String (중복 없는 16자리)
@@ -37,7 +37,7 @@
 4. 고객 카드 잔액 확인 api
     - url path: POST /v1/user/card/balance
     - request:
-        1. password, Int (4자리)
+        1. password, String (4자리)
     - response:
         1. 성공 (200)
             - balance, Int
