@@ -9,8 +9,29 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
 class UserEntityService(private val userRepository: UserRepository) {
+
     fun add(userEntity: UserEntity): UserEntity {
         return userRepository.save(userEntity)
     }
+
+    fun findByName(userEntity: UserEntity): UserEntity? {
+        return userEntity.name?.let { userRepository.findByName(it) }
+    }
+
+    fun existsByCardNumber(cardNumber: String): Boolean{
+        return userRepository.existsByCardNumber(cardNumber)
+    }
+
+    fun updateCardNumber(id: Long, cardNumber: String): UserEntity? {
+        val optionalEntity = userRepository.findById(id)
+        if (optionalEntity.isPresent) {
+            val userEntity = optionalEntity.get()
+            userEntity.cardNumber = cardNumber
+            return userRepository.save(userEntity)
+        }
+        return null
+    }
+
+
 
 }
