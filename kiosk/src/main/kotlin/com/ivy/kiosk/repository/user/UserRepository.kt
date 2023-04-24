@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserRepository : JpaRepository<UserEntity, Long> {
 
-    fun findByName(name: String): UserEntity
+    fun findByName(name: String): UserEntity?
 
     fun existsByCardNumber(cardNumber: String): Boolean
+
+    fun findByCardNumber(cardNumber: String): UserEntity?
 }

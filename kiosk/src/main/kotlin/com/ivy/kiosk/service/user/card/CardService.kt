@@ -1,10 +1,13 @@
 package com.ivy.kiosk.service.user.card
 
 
+import com.ivy.kiosk.dao.user.UserEntity
 import com.ivy.kiosk.dao.user.card.CardEntity
 import com.ivy.kiosk.dto.user.card.CardDto
+import com.ivy.kiosk.dto.user.card.TopUpAmountDto
 import com.ivy.kiosk.mapper.user.UserMapper
 import com.ivy.kiosk.mapper.user.card.CardMapper
+import com.ivy.kiosk.mapper.user.card.CardTopUpHistoryMapper
 import com.ivy.kiosk.service.user.UserEntityService
 import com.ivy.kiosk.service.user.UserService
 import org.springframework.stereotype.Service
@@ -23,6 +26,11 @@ class CardService(
     fun addNewCard(cardDto: CardDto): CardDto {
         val cardEntity = cardMapper.toEntity(cardDto)
         return cardMapper.toDto(cardEntityService.add(cardEntity))
+    }
+
+
+    fun updateBalance(cardNumber: String, amount: Int): Int {
+        return cardEntityService.updateBalance(cardNumber, amount)
     }
 
 

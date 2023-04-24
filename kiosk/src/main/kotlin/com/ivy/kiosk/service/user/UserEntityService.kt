@@ -33,5 +33,9 @@ class UserEntityService(private val userRepository: UserRepository) {
     }
 
 
+    fun findByCardNumber(cardNumber: String): UserEntity? {
+        return userRepository.findByCardNumber(cardNumber)
+    }
+
 
 }
