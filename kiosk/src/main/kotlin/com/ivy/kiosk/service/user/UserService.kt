@@ -29,7 +29,7 @@ class UserService(
         }
     }
 
-    fun updateCardNumber(userId: Long, cardNumber: String): UserEntity? {
+    fun updateCardNumber(userId: Long, cardNumber: String) {
         return userEntityService.updateCardNumber(userId, cardNumber)
     }
 

@@ -22,14 +22,8 @@ class UserEntityService(private val userRepository: UserRepository) {
         return userRepository.existsByCardNumber(cardNumber)
     }
 
-    fun updateCardNumber(id: Long, cardNumber: String): UserEntity? {
-        val optionalEntity = userRepository.findById(id)
-        if (optionalEntity.isPresent) {
-            val userEntity = optionalEntity.get()
-            userEntity.cardNumber = cardNumber
-            return userRepository.save(userEntity)
-        }
-        return null
+    fun updateCardNumber(id: Long, cardNumber: String) {
+        return userRepository.updateCardNumber(id, cardNumber)
     }
 
 
