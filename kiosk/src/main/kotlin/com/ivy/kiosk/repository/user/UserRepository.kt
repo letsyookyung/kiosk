@@ -1,6 +1,7 @@
 package com.ivy.kiosk.repository.user
 
 import com.ivy.kiosk.dao.user.UserEntity
+import com.ivy.kiosk.dao.user.card.CardEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -13,6 +14,8 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
     fun findByName(name: String): UserEntity?
 
     fun existsByCardNumber(cardNumber: String): Boolean
+
+    fun findByCardNumber(cardNumber: String): UserEntity?
 
     @Transactional
     @Modifying
