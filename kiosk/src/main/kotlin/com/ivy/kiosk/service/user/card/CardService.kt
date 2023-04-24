@@ -34,6 +34,10 @@ class CardService(
     }
 
 
+    fun getMyBalance(cardNumber: String): CardEntity {
+        return cardEntityService.findByCardNumber(cardNumber)
+    }
+
     fun createUniqueCardNumber(): String {
         val cardNumber = generateRandomNumber()
         if (userEntityService.existsByCardNumber(cardNumber)) {
@@ -41,6 +45,7 @@ class CardService(
         }
         return cardNumber
     }
+
 
     private fun generateRandomNumber(): String {
         val rand = Random.nextFloat()

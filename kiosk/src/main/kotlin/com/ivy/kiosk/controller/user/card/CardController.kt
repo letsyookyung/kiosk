@@ -1,17 +1,16 @@
 package com.ivy.kiosk.controller.user.card
 
+import com.ivy.kiosk.dao.user.card.CardEntity
 import com.ivy.kiosk.dto.user.card.CardDto
 import com.ivy.kiosk.mapper.user.UserMapper
 import com.ivy.kiosk.mapper.user.card.CardTopUpHistoryMapper
+import com.ivy.kiosk.model.user.card.CheckMyBalanceModel
 import com.ivy.kiosk.model.user.card.IssueCardModel
 import com.ivy.kiosk.model.user.card.TopUpAmountModel
 import com.ivy.kiosk.service.user.UserService
 import com.ivy.kiosk.service.user.card.CardService
 import com.ivy.kiosk.service.user.card.CardTopUpHistoryService
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/v1/user")
@@ -23,7 +22,7 @@ class CardController(
     private val cardTopUpHistoryService: CardTopUpHistoryService,
 ) {
 
-    @PostMapping("/card")
+    @PostMapping("/card/new")
     fun issueNewCard(@RequestBody issueCardModel: IssueCardModel): String? {
         val userDto = userMapper.toDto(issueCardModel)
         val userId = userService.getUserIdIfValidPassword(userDto)
@@ -51,6 +50,16 @@ class CardController(
         cardTopUpHistoryService.addCardTopUpHistory(topUpAmountDto)
 
         return cardService.updateBalance(topUpAmountModel.cardNumber, topUpAmountModel.amount)
+    }
+
+    @GetMapping("/card/balance/")
+    fun getMyBalance(@RequestParam cardNumber: String, @RequestParam password: String): Int? {
+        if (!userService.isValidCardToUse(cardNumber, password)) {
+            throw IllegalArgumentException("입력하신 비밀번호와 입력하신 카드번호의 비밀번호가 일치하지 않습니다.")
+        }
+
+        return cardService.getMyBalance(cardNumber).balance
+
     }
 
 
