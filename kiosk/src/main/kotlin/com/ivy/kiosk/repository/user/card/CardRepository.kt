@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 interface CardRepository : JpaRepository<CardEntity, Long> {
 
+    fun findByCardNumber(cardNumber: String): CardEntity
+
     @Transactional
     @Modifying
     @Query("UPDATE CardEntity c SET c.balance = c.balance + :amount WHERE c.cardNumber = :cardNumber")

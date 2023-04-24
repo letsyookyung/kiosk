@@ -21,6 +21,10 @@ class CardEntityService(private val cardRepository: CardRepository) {
         return cardRepository.updateBalance(cardNumber, amount)
     }
 
+    fun findByCardNumber(cardNumber: String): CardEntity {
+        return cardRepository.findByCardNumber(cardNumber)
+    }
+
 }
 
 
