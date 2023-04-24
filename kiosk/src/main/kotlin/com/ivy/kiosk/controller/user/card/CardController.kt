@@ -1,10 +1,8 @@
 package com.ivy.kiosk.controller.user.card
 
-import com.ivy.kiosk.dao.user.card.CardEntity
 import com.ivy.kiosk.dto.user.card.CardDto
 import com.ivy.kiosk.mapper.user.UserMapper
 import com.ivy.kiosk.mapper.user.card.CardTopUpHistoryMapper
-import com.ivy.kiosk.model.user.card.CheckMyBalanceModel
 import com.ivy.kiosk.model.user.card.IssueCardModel
 import com.ivy.kiosk.model.user.card.TopUpAmountModel
 import com.ivy.kiosk.service.user.UserService
