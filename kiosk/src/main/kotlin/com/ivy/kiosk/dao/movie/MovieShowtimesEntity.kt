@@ -5,7 +5,7 @@ import java.time.LocalTime
 import javax.persistence.*
 
 @Entity
-@Table(name = "movie_showtimes")
+@Table(name = "showtimes")
 class MovieShowtimesEntity {
     @Column(nullable = false)
     var date: LocalDate = LocalDate.now()
