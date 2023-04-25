@@ -27,19 +27,22 @@ class MovieService(
 
     fun findByBetweenDate(date: LocalDate): List<MovieEntity>? {
         return movieEntityService.findByBetweenDate(date)
-
     }
-
 
     fun createDailyShowtimes(movieShowtimesDtoList: List<MovieShowtimesDto>, today: LocalDate): List<MovieShowtimesEntity> {
 
-        val newDtoList = movieShowtimesDtoList.flatMap { movie -> generateMovieShowtimesDtoInDetail(movie, 3, today) }
+        val newDtoList = movieShowtimesDtoList.flatMap { movie ->
+            generateMovieShowtimesDtoInDetail(movie, 3, today) }
 
-        val entityList = newDtoList.map { dto -> movieMapper.toEntity(dto) }
-
+        val entityList = newDtoList.map { dto ->
+            movieMapper.toEntity(dto) }
         val filteredEntityList = filterToExcludeAlreadyIn(entityList, today)
 
         return movieShowtimesEntityService.addDailyShowtimes(filteredEntityList)
+    }
+
+    fun getShowtimes(date: LocalDate): List<MovieShowtimesEntity>? {
+        return movieShowtimesEntityService.findByDate(date)
     }
 
 
@@ -69,14 +72,10 @@ class MovieService(
             )
         }
         return newMovieShowtimesDtoList
-
     }
 
 
-    private fun filterToExcludeAlreadyIn(
-        entityList: List<MovieShowtimesEntity>,
-        today: LocalDate
-    ): List<MovieShowtimesEntity> {
+    private fun filterToExcludeAlreadyIn(entityList: List<MovieShowtimesEntity>, today: LocalDate): List<MovieShowtimesEntity> {
         val existingShowtimes = movieShowtimesEntityService.findByDate(today)
 
         val filteredEntityList = entityList.filterNot { newShowtime ->
@@ -85,7 +84,7 @@ class MovieService(
         }
 
         return filteredEntityList
-
     }
+
 
 }

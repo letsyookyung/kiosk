@@ -1,6 +1,7 @@
 package com.ivy.kiosk.controller.movie
 
 import com.ivy.kiosk.dao.movie.MovieEntity
+import com.ivy.kiosk.dao.movie.MovieShowtimesEntity
 import com.ivy.kiosk.mapper.movie.MovieMapper
 import com.ivy.kiosk.model.movie.MovieRequestModel
 import com.ivy.kiosk.service.movie.MovieService
@@ -33,6 +34,11 @@ class MovieController(
         if (movieShowtimesDtoList != null) {
            movieService.createDailyShowtimes(movieShowtimesDtoList, date) }
         }
+
+    @GetMapping("/{date}/showtimes")
+    fun getShowtimes(@DateTimeFormat(pattern = "yyyy-MM-dd")@PathVariable date: LocalDate): List<MovieShowtimesEntity>? {
+        return movieService.getShowtimes(date)
+    }
 
 }
 
