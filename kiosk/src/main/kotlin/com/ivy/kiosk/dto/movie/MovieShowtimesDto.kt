@@ -14,12 +14,15 @@ data class MovieShowtimesDto(
     val runningTime: Long?,
     var type: MovieShowtimesType?,
     var price: Int?,
+    var seats: MutableMap<String,List<Int>>? = null,
 ) {
     init {
         if (startTime?.isBefore(LocalTime.of(12, 0)) == true) {
             type = MovieShowtimesType.MATINEE
             price = (price?.times(0.7))?.roundToInt()
         }
+
+
 
     }
 }

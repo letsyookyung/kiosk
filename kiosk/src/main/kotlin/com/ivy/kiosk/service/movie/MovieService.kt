@@ -5,12 +5,12 @@ import com.ivy.kiosk.dao.movie.MovieShowtimesEntity
 import com.ivy.kiosk.dao.movie.MovieShowtimesType
 import com.ivy.kiosk.dto.movie.MovieDto
 import com.ivy.kiosk.dto.movie.MovieShowtimesDto
+import com.ivy.kiosk.dto.movie.MovieShowtimesWithSeatsDto
 import com.ivy.kiosk.mapper.movie.MovieMapper
 import org.springframework.stereotype.Service
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+
 
 
 @Service
@@ -18,8 +18,8 @@ class MovieService(
     private val movieMapper: MovieMapper,
     private val movieEntityService: MovieEntityService,
     private val movieShowtimesEntityService: MovieShowtimesEntityService,
+    private val seatsEntityService: SeatsEntityService,
 ) {
-
     fun add(movieDtoList: List<MovieDto>): List<MovieEntity> {
         val movieEntityList = movieDtoList.map {movie -> movieMapper.toEntity(movie) }
         return movieEntityService.add(movieEntityList)
@@ -41,16 +41,33 @@ class MovieService(
         return movieShowtimesEntityService.addDailyShowtimes(filteredEntityList)
     }
 
-    fun getShowtimes(date: LocalDate): List<MovieShowtimesEntity>? {
-        return movieShowtimesEntityService.findByDate(date)
+    fun getShowtimesWithSeats(date: LocalDate): List<MovieShowtimesWithSeatsDto> {
+        val movieShowtimesEntityList = movieShowtimesEntityService.findByDate(date)
+
+        return movieShowtimesEntityList.mapNotNull {
+            val availableSeats = mapOnlyWithAvailableSeats(it)
+            MovieShowtimesWithSeatsDto(it, availableSeats)
+        }
+
+    }
+
+    private fun mapOnlyWithAvailableSeats(movieShowtimesEntity: MovieShowtimesEntity): List<String?> {
+        val totalAvailableSeats = ('A'..'E').flatMap { aisle ->
+            (1..10).map { number ->
+                "$aisle${number.toString().padStart(2, '0')}"
+            }
+        }.toMutableList()
+
+        val notAvailableSeats = seatsEntityService.findSeatsByShowtimesId(movieShowtimesEntity.id!!)
+            .filter { it in totalAvailableSeats }
+
+        totalAvailableSeats.removeAll(notAvailableSeats)
+
+        return totalAvailableSeats
     }
 
 
-    private fun generateMovieShowtimesDtoInDetail(
-        movie: MovieShowtimesDto,
-        numTimes: Int,
-        today: LocalDate)
-    : MutableList<MovieShowtimesDto> {
+    private fun generateMovieShowtimesDtoInDetail(movie: MovieShowtimesDto, numTimes: Int, today: LocalDate): MutableList<MovieShowtimesDto> {
 
         val newMovieShowtimesDtoList = mutableListOf<MovieShowtimesDto>()
         val startTime = LocalTime.of(9, 0)
@@ -75,7 +92,10 @@ class MovieService(
     }
 
 
-    private fun filterToExcludeAlreadyIn(entityList: List<MovieShowtimesEntity>, today: LocalDate): List<MovieShowtimesEntity> {
+    private fun filterToExcludeAlreadyIn(
+        entityList: List<MovieShowtimesEntity>,
+        today: LocalDate
+    ): List<MovieShowtimesEntity> {
         val existingShowtimes = movieShowtimesEntityService.findByDate(today)
 
         val filteredEntityList = entityList.filterNot { newShowtime ->

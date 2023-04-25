@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
-class MovieShowtimesEntityService(
-    private val movieShowtimesRepository: MovieShowtimesRepository,
-) {
+class MovieShowtimesEntityService(private val movieShowtimesRepository: MovieShowtimesRepository) {
 
     fun addDailyShowtimes(movieShowtimesEntityList: List<MovieShowtimesEntity>): List<MovieShowtimesEntity> {
         return movieShowtimesEntityList.map { movieShowtimesEntity ->
