@@ -54,6 +54,7 @@
             - 비밀번호가 틀린 경우 -> 400
 
 
+~~**영화 추가 api 필요~~
 
 5. 영화 상영표 확인 api
     - url path: GET /v1/movie/showtimes
