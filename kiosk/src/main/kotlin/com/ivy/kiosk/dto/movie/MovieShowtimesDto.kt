@@ -3,13 +3,14 @@ package com.ivy.kiosk.dto.movie
 import com.ivy.kiosk.dao.movie.MovieShowtimesType
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
 data class MovieShowtimesDto(
     val id: Long? = 0,
     val date: LocalDate,
     val title: String,
-    val startTime: LocalTime?,
+    var startTime: LocalTime?,
     val endTime: LocalTime?,
     val runningTime: Long?,
     var type: MovieShowtimesType?,
@@ -21,10 +22,8 @@ data class MovieShowtimesDto(
             type = MovieShowtimesType.MATINEE
             price = (price?.times(0.7))?.roundToInt()
         }
-
-
-
     }
+
 }
 
 

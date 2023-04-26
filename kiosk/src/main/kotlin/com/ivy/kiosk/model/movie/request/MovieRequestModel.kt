@@ -1,4 +1,4 @@
-package com.ivy.kiosk.model.movie
+package com.ivy.kiosk.model.movie.request
 
 import java.time.LocalDate
 
