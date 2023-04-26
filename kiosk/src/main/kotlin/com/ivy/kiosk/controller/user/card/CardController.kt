@@ -39,7 +39,7 @@ class CardController(
             throw IllegalArgumentException("입력하신 비밀번호와 입력하신 카드번호의 비밀번호가 일치하지 않습니다.")
         }
 
-        if (topUpAmountModel.amount % 50000 != 0 || topUpAmountModel.amount <= 50000) {
+        if (topUpAmountModel.amount % 50000 != 0 || topUpAmountModel.amount < 50000) {
             throw IllegalArgumentException("5만원 단위로 충전이 가능합니다.")
         }
 
