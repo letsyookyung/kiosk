@@ -40,6 +40,7 @@
             - amount 입력 단위가 5의 배수가 아닌 경우 -> 400
 
 
+
 4. 고객 카드 잔액 확인 api
     - url path: POST /v1/user/card/balance
     - request:
@@ -56,9 +57,9 @@
 ~~**영화 추가 api 필요~~
 
 5. 영화 상영표 확인 api
-    - url path: GET /v1/movie/showtimes/{date}
+    - url path: GET /v1/movie/showtimes
     - request:
-        1. date, LocalDate (2023-11-11)
+        1. 없음
     - response:
         1. 성공 (200)
             - ListOfMovies, List<Movie>?
@@ -71,10 +72,8 @@
     - request:
         1. cardNumber, String (중복 없는 16자리)
         2. password, String (4자리)
-        3. date, LocalDate (2023-11-11)
-        4. title, String
-        5. startTime, String
-        6. seats, String
+        3. title, String
+        4. seats, Int
     - response:
         1. 성공 (200)
             - 예약 성공 메세지
@@ -88,7 +87,7 @@
 7. 극장 매니저 일일 매출 현황 api
     - url path: GET /v1/manager/daily-sales/{date}
     - request:
-        1. date, LocalDate (2023-11-11)
+        1. date, Date
     - response:
         1. 성공 (200)
             - dailyCardTopUpAmount, Int
