@@ -1,5 +1,6 @@
 package com.ivy.kiosk.dto.user.card
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 

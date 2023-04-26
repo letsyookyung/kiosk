@@ -16,7 +16,7 @@ class ManagerController(
 ) {
 
     @GetMapping("/daily-sales/{date}")
-    fun getDailySales(@DateTimeFormat(pattern = "yyyy-MM-dd")@PathVariable date: LocalDate) {
+    fun getDailySales(@DateTimeFormat(pattern = "yyyy-MM-dd")@PathVariable date: LocalDate): Int {
         return managerService.getDailySales(date)
     }
 

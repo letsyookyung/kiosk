@@ -1,4 +1,4 @@
-package com.ivy.kiosk.dto
+package com.ivy.kiosk.dto.movie
 
 data class SeatsDto(
     val showtimesId: Long,

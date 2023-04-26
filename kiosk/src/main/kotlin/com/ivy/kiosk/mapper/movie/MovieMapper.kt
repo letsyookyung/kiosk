@@ -4,7 +4,7 @@ import com.ivy.kiosk.dao.movie.MovieEntity
 import com.ivy.kiosk.dao.movie.MovieShowtimesEntity
 import com.ivy.kiosk.dao.movie.SeatsEntity
 import com.ivy.kiosk.dao.movie.TicketSalesEntity
-import com.ivy.kiosk.dto.SeatsDto
+import com.ivy.kiosk.dto.movie.SeatsDto
 import com.ivy.kiosk.dto.movie.TicketSalesDto
 import com.ivy.kiosk.dto.movie.MovieDto
 import com.ivy.kiosk.dto.movie.MovieShowtimesDto
@@ -14,7 +14,6 @@ import org.mapstruct.Mapper
 import org.mapstruct.ReportingPolicy
 import org.springframework.stereotype.Component
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 
 @Component

@@ -1,7 +1,7 @@
 package com.ivy.kiosk.service.movie
 
 import com.ivy.kiosk.dao.movie.*
-import com.ivy.kiosk.dto.SeatsDto
+import com.ivy.kiosk.dto.movie.SeatsDto
 import com.ivy.kiosk.dto.movie.TicketSalesDto
 import com.ivy.kiosk.dto.movie.MovieDto
 import com.ivy.kiosk.dto.movie.MovieShowtimesDto
