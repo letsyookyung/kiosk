@@ -9,8 +9,9 @@ import org.springframework.stereotype.Component
 @Component
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 abstract class CardMapper {
+    abstract fun toDto(entity: CardEntity): CardDto
+
+    abstract fun toDto(userId: Long, cardNumber: String): CardDto
 
     abstract fun toEntity(dto: CardDto): CardEntity
-
-    abstract fun toDto(entity: CardEntity): CardDto
 }

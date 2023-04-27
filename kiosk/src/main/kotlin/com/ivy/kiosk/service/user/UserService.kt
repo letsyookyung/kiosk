@@ -20,12 +20,12 @@ class UserService(
         return userEntityService.findByName(userEntity) ?: throw IllegalArgumentException("입력하신 이름의 고객은 없습니다.")
     }
 
-    fun getUserIdIfValidPassword(userDto: UserDto): Long? {
+    fun getUserIdIfValidPassword(userDto: UserDto): UserEntity? {
         val user = getUserInfo(userDto)
         if (!user!!.password.equals(userDto.password)) {
             throw IllegalArgumentException("입력하신 비밀번호가 틀렸습니다.")
         } else {
-            return user.id
+            return user
         }
     }
 

@@ -3,13 +3,10 @@ package com.ivy.kiosk.controller.user.card
 import com.ivy.kiosk.dto.user.card.CardDto
 import com.ivy.kiosk.mapper.user.UserMapper
 import com.ivy.kiosk.mapper.user.card.CardMapper
-import com.ivy.kiosk.model.user.card.IssueCardModel
+import com.ivy.kiosk.model.user.UserInfoModel
 import com.ivy.kiosk.service.user.UserService
 import com.ivy.kiosk.service.user.card.CardService
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/v1/user")
@@ -21,21 +18,25 @@ class CardController(
 ) {
 
     @PostMapping("/card")
-    fun issueNewCard(@RequestBody issueCardModel: IssueCardModel): String? {
-        val userDto = userMapper.toDto(issueCardModel)
-        val userId = userService.getUserIdIfValidPassword(userDto)
+    fun issueNewCard(@RequestBody userInfoModel: UserInfoModel): String? {
+        val userDto = userMapper.toDto(userInfoModel)
+        val user = userService.getUserIdIfValidPassword(userDto)
 
         val cardNumber = cardService.createUniqueCardNumber()
 
-        userId?.let { userService.updateCardNumber(it, cardNumber) }
+         val cardEntity = user?.let{
+            userService.updateCardNumber(it.id!!, cardNumber)
+            cardService.addNewCard(cardMapper.toDto(user.id!!, cardNumber))
+        }
 
-        return cardService.addNewCard(createCardDto(cardNumber)).cardNumber
+        return cardEntity?.cardNumber
 
     }
-
-
-    private fun createCardDto(cardNumber: String): CardDto {
-        return CardDto(cardNumber = cardNumber)
+    @GetMapping("/card-number")
+    fun getCardNumber(@RequestBody userInfoModel: UserInfoModel): String? {
+        val userDto = userMapper.toDto(userInfoModel)
+        val user = userService.getUserIdIfValidPassword(userDto)
+        return user?.cardNumber
     }
 
 
