@@ -9,6 +9,7 @@ import com.ivy.kiosk.service.user.UserService
 import com.ivy.kiosk.service.user.card.CardService
 import com.ivy.kiosk.service.user.card.CardTopUpHistoryService
 import com.ivy.kiosk.model.user.UserInfoModel
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -25,6 +26,8 @@ class CardController(
     private val cardTopUpHistoryService: CardTopUpHistoryService,
 ) {
 
+    private val logger = LoggerFactory.getLogger(this.javaClass)
+
     @PostMapping("/card/new")
     fun issueNewCard(@RequestBody userInfoModel: UserInfoModel): ResponseEntity<String> {
         val userDto = userMapper.toDto(userInfoModel)
@@ -35,6 +38,8 @@ class CardController(
         userService.updateCardNumber(user?.id!!, cardNumber)
 
         cardService.addNewCard(CardDto( null, user?.id!!, cardNumber, LocalDateTime.now(), 0))
+
+        logger.info("Card issued to user {}", userInfoModel.name)
 
         return ResponseEntity.status(HttpStatus.OK).body(cardNumber)
     }
@@ -55,17 +60,23 @@ class CardController(
 
         cardService.updateBalance(topUpAmountModel.cardNumber, topUpAmountModel.amount)
 
+        logger.info("Card {} was topped up by {} won", topUpAmountModel.cardNumber, topUpAmountModel.amount)
+
         return ResponseEntity.status(HttpStatus.OK).body("success")
 
     }
 
-    @GetMapping("/card/balance/")
+    @GetMapping("/card/balance")
     fun getMyBalance(@RequestParam cardNumber: String, @RequestParam password: String): ResponseEntity<Int> {
         if (!userService.isValidCardToUse(cardNumber, password)) {
             throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(cardService.getMyBalance(cardNumber).balance)
+        val balance = cardService.getMyBalance(cardNumber).balance
+
+        logger.info("Card {} balance is {}", cardNumber, balance)
+
+        return ResponseEntity.status(HttpStatus.OK).body(balance)
 
     }
 

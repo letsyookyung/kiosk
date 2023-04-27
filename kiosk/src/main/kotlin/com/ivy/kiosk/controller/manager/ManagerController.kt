@@ -1,6 +1,7 @@
 package com.ivy.kiosk.controller.manager
 
 import com.ivy.kiosk.service.manager.ManagerService
+import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -17,9 +18,15 @@ class ManagerController(
     private val managerService: ManagerService,
 ) {
 
+    private val logger = LoggerFactory.getLogger(this.javaClass)
+
     @GetMapping("/daily-sales/{date}")
     fun getDailySales(@DateTimeFormat(pattern = "yyyy-MM-dd")@PathVariable date: LocalDate): ResponseEntity<Map<String, Int?>>  {
         val results = managerService.getDailySales(date)
+
+        logger.info("Daily sales for {} retrieved: card top-up amount = {}, ticket sales amount = {}, total sales amount = {}",
+            date, results[0], results[1], results[2])
+
         return ResponseEntity.status(HttpStatus.OK).body(mapOf(
             "카드 충전 금액" to results[0],
             "티켓 판매 금액" to results[1],

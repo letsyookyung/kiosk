@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <File name="MovieFile" fileName="./src/main/resources/logs/movie_controller.log">
+            <PatternLayout pattern="%d [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="CardFile" fileName="./src/main/resources/logs/card_controller.log">
+            <PatternLayout pattern="%d [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="UserFile" fileName="./src/main/resources/logs/user_controller.log">
+            <PatternLayout pattern="%d [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+        <File name="ManagerFile" fileName="./src/main/resources/logs/manager_controller.log">
+            <PatternLayout pattern="%d [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="MovieFile"/>
+            <AppenderRef ref="CardFile"/>
+            <AppenderRef ref="UserFile"/>
+            <AppenderRef ref="ManagerFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

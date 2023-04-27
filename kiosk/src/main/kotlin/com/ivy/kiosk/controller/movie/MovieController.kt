@@ -9,17 +9,17 @@ import com.ivy.kiosk.mapper.movie.MovieMapper
 import com.ivy.kiosk.model.movie.request.MovieBookingRequestModel
 import com.ivy.kiosk.model.movie.request.MovieRequestModel
 import com.ivy.kiosk.service.movie.MovieService
-import com.ivy.kiosk.service.movie.MovieShowtimesEntityService
 import com.ivy.kiosk.service.user.UserService
 import com.ivy.kiosk.service.user.card.CardService
+import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
+import java.io.File
 import java.time.LocalDate
 import javax.validation.Valid
-import kotlin.system.exitProcess
 
 @RestController
 @RequestMapping("/v1/movie")
@@ -30,9 +30,12 @@ class MovieController(
     private val cardService: CardService,
 ) {
 
+    private val logger = LoggerFactory.getLogger(this.javaClass)
+
     @PostMapping("/new")
     fun addMovies(@RequestBody movieList: List<MovieRequestModel>): ResponseEntity<List<MovieEntity>> {
         val movieDtoList = movieList.map { movie -> movieMapper.toDto(movie) }
+        logger.info("Request received to add {} movies", movieList.size)
 
         return ResponseEntity.status(HttpStatus.OK).body(movieService.add(movieDtoList))
 
@@ -101,6 +104,9 @@ class MovieController(
                 "${movieBookingRequestModel.date} ${movieBookingRequestModel.startTime} " +
                 "${movieBookingRequestModel.title} ${movieBookingRequestModel.seatNumber} " +
                 "예약 완료 되었습니다."
+
+        logger.info("Request received to book a ticket for {} at {} on {}",
+            movieBookingRequestModel.title, movieBookingRequestModel.startTime, movieBookingRequestModel.date)
 
         return ResponseEntity.status(HttpStatus.OK).body(result)
     }
