@@ -43,6 +43,7 @@ class MovieService(
         movieShowtimesDtoList: List<MovieShowtimesDto>,
         today: LocalDate
     ): List<MovieShowtimesEntity> {
+
         val newDtoList = movieShowtimesDtoList.flatMap { movie ->
             generateMovieShowtimesDtoInDetail(movie, 3, today)
         }

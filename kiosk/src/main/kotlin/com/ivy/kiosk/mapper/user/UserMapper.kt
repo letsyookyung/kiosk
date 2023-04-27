@@ -15,5 +15,7 @@ abstract class UserMapper {
 
     abstract fun toDto(entity: UserEntity): UserDto
 
+    abstract fun toDto(name: String, password: String): UserDto
+
     abstract fun toEntity(dto: UserDto): UserEntity
 }

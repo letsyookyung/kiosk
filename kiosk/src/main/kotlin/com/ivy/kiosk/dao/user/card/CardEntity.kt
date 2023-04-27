@@ -1,6 +1,7 @@
 package com.ivy.kiosk.dao.user.card
 
 import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.persistence.*
 
 
@@ -14,7 +15,7 @@ class CardEntity {
     var cardNumber: String? = ""
 
     @Column(nullable = true)
-    var createdAt: LocalDate? = LocalDate.now()
+    var createdAt: LocalDateTime? = LocalDateTime.now()
 
     @Column(nullable = true)
     var balance: Int? = 0

@@ -1,11 +1,11 @@
 package com.ivy.kiosk.dto.user.card
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class CardDto(
     val id: Long? = 0,
     val userId: Long?,
-    val cardNumber: String?,
-    val createdAt: LocalDate?,
+    val cardNumber: String,
+    val createdAt: LocalDateTime?,
     val balance: Int? = 0
     )

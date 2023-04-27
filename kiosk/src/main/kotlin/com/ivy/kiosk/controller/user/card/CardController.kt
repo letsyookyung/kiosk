@@ -8,6 +8,8 @@ import com.ivy.kiosk.service.user.UserService
 import com.ivy.kiosk.service.user.card.CardService
 import com.ivy.kiosk.service.user.card.CardTopUpHistoryService
 import com.ivy.kiosk.model.user.UserInfoModel
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -22,7 +24,7 @@ class CardController(
 ) {
 
     @PostMapping("/card/new")
-    fun issueNewCard(@RequestBody userInfoModel: UserInfoModel): String? {
+    fun issueNewCard(@RequestBody userInfoModel: UserInfoModel): ResponseEntity<String> {
         val userDto = userMapper.toDto(userInfoModel)
         val user = userService.getUserIdIfValidPassword(userDto)
 
@@ -32,13 +34,13 @@ class CardController(
             userService.updateCardNumber(it.id!!, cardNumber)
             cardService.addNewCard(cardMapper.toDto(user.id!!, cardNumber))
         }
-        return cardEntity?.cardNumber
+        return ResponseEntity.status(HttpStatus.OK).body(cardEntity?.cardNumber)
     }
 
     @PostMapping("/card/money")
-    fun topUpCardBalance(@RequestBody topUpAmountModel: TopUpAmountModel): Int {
+    fun topUpCardBalance(@RequestBody topUpAmountModel: TopUpAmountModel): ResponseEntity<String> {
         if (!userService.isValidCardToUse(topUpAmountModel.cardNumber, topUpAmountModel.password)) {
-            throw IllegalArgumentException("입력하신 비밀번호와 입력하신 카드번호의 비밀번호가 일치하지 않습니다.")
+            throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
         }
 
         if (topUpAmountModel.amount % 50000 != 0 || topUpAmountModel.amount < 50000) {
@@ -49,24 +51,30 @@ class CardController(
 
         cardTopUpHistoryService.addCardTopUpHistory(topUpAmountDto)
 
-        return cardService.updateBalance(topUpAmountModel.cardNumber, topUpAmountModel.amount)
+        return if (cardService.updateBalance(topUpAmountModel.cardNumber, topUpAmountModel.amount) >= 1) {
+            ResponseEntity.status(HttpStatus.OK).body("success")
+        } else {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("변경된 것이 없음")
+        }
+
     }
 
     @GetMapping("/card/balance/")
-    fun getMyBalance(@RequestParam cardNumber: String, @RequestParam password: String): Int? {
+    fun getMyBalance(@RequestParam cardNumber: String, @RequestParam password: String): ResponseEntity<Int> {
         if (!userService.isValidCardToUse(cardNumber, password)) {
-            throw IllegalArgumentException("입력하신 비밀번호와 입력하신 카드번호의 비밀번호가 일치하지 않습니다.")
+            throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
         }
 
-        return cardService.getMyBalance(cardNumber).balance
+        return ResponseEntity.status(HttpStatus.OK).body(cardService.getMyBalance(cardNumber).balance)
 
     }
 
     @GetMapping("/card-number")
-    fun getCardNumber(@RequestBody userInfoModel: UserInfoModel): String? {
-        val userDto = userMapper.toDto(userInfoModel)
+    fun findCardNumber(@RequestParam name: String, @RequestParam password: String): ResponseEntity<String> {
+        val userDto = userMapper.toDto(name, password)
         val user = userService.getUserIdIfValidPassword(userDto)
-        return user?.cardNumber
+
+        return ResponseEntity.status(HttpStatus.OK).body(user?.cardNumber)
     }
 
 }
