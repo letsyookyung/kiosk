@@ -1,13 +1,13 @@
 package com.ivy.kiosk.controller.user.card
 
-import com.ivy.kiosk.dto.user.card.CardDto
 import com.ivy.kiosk.mapper.user.UserMapper
+import com.ivy.kiosk.mapper.user.card.CardMapper
 import com.ivy.kiosk.mapper.user.card.CardTopUpHistoryMapper
-import com.ivy.kiosk.model.user.card.IssueCardModel
 import com.ivy.kiosk.model.user.card.TopUpAmountModel
 import com.ivy.kiosk.service.user.UserService
 import com.ivy.kiosk.service.user.card.CardService
 import com.ivy.kiosk.service.user.card.CardTopUpHistoryService
+import com.ivy.kiosk.model.user.UserInfoModel
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -16,21 +16,23 @@ class CardController(
     private val userService: UserService,
     private val userMapper: UserMapper,
     private val cardService: CardService,
+    private val cardMapper: CardMapper,
     private val cardTopUpHistoryMapper: CardTopUpHistoryMapper,
     private val cardTopUpHistoryService: CardTopUpHistoryService,
 ) {
 
     @PostMapping("/card/new")
-    fun issueNewCard(@RequestBody issueCardModel: IssueCardModel): String? {
-        val userDto = userMapper.toDto(issueCardModel)
-        val userId = userService.getUserIdIfValidPassword(userDto)
+    fun issueNewCard(@RequestBody userInfoModel: UserInfoModel): String? {
+        val userDto = userMapper.toDto(userInfoModel)
+        val user = userService.getUserIdIfValidPassword(userDto)
 
         val cardNumber = cardService.createUniqueCardNumber()
 
-        userId?.let { userService.updateCardNumber(it, cardNumber) }
-
-        return cardService.addNewCard(createCardDto(cardNumber)).cardNumber
-
+         val cardEntity = user?.let{
+            userService.updateCardNumber(it.id!!, cardNumber)
+            cardService.addNewCard(cardMapper.toDto(user.id!!, cardNumber))
+        }
+        return cardEntity?.cardNumber
     }
 
     @PostMapping("/card/money")
@@ -60,10 +62,11 @@ class CardController(
 
     }
 
-
-    private fun createCardDto(cardNumber: String): CardDto {
-        return CardDto(cardNumber = cardNumber)
+    @GetMapping("/card-number")
+    fun getCardNumber(@RequestBody userInfoModel: UserInfoModel): String? {
+        val userDto = userMapper.toDto(userInfoModel)
+        val user = userService.getUserIdIfValidPassword(userDto)
+        return user?.cardNumber
     }
-
 
 }

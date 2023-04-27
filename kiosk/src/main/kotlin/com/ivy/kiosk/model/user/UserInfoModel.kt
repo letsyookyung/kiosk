@@ -1,8 +1,6 @@
 package com.ivy.kiosk.model.user
 
-import javax.validation.constraints.Size
-
-data class SignUpFormModel(
+data class UserInfoModel(
     val name: String,
     val password: String,
 )

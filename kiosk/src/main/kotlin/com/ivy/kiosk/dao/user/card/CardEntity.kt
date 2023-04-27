@@ -7,8 +7,11 @@ import javax.persistence.*
 @Entity
 @Table(name = "cards")
 class CardEntity {
+    @Column(nullable = false)
+    var userId: Long? = 0
+
     @Column(nullable = false, length = 16)
-    var cardNumber: String = ""
+    var cardNumber: String? = ""
 
     @Column(nullable = true)
     var createdAt: LocalDate? = LocalDate.now()
