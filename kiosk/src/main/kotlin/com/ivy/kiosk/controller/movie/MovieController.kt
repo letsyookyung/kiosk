@@ -64,6 +64,10 @@ class MovieController(
         @PathVariable date: LocalDate
     ): ResponseEntity<List<MovieShowtimesWithSeatsDto>> {
 
+        if (movieService.getShowtimesWithSeats(date).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(emptyList())
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(movieService.getShowtimesWithSeats(date))
     }
 

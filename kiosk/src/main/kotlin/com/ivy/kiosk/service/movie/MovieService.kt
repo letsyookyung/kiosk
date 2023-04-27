@@ -42,7 +42,7 @@ class MovieService(
     fun generateDailyShowtimes(
         movieShowtimesDtoList: List<MovieShowtimesDto>,
         today: LocalDate
-    ): List<MovieShowtimesEntity> {
+    ): List<MovieShowtimesEntity>? {
 
         val newDtoList = movieShowtimesDtoList.flatMap { movie ->
             generateMovieShowtimesDtoInDetail(movie, 3, today)
@@ -54,16 +54,19 @@ class MovieService(
 
         val filteredEntityList = filterToExcludeAlreadyIn(entityList, today)
 
-        return movieShowtimesEntityService.addDailyShowtimes(filteredEntityList)
+        return filteredEntityList?.let { movieShowtimesEntityService.addDailyShowtimes(it) }
     }
 
     fun getShowtimesWithSeats(date: LocalDate): List<MovieShowtimesWithSeatsDto> {
         val movieShowtimesEntityList = movieShowtimesEntityService.findByDate(date)
 
-        return movieShowtimesEntityList.mapNotNull {
-            val availableSeats = mapOnlyWithAvailableSeats(it)
-            MovieShowtimesWithSeatsDto(it, availableSeats)
+        if (movieShowtimesEntityList != null) {
+            return movieShowtimesEntityList.mapNotNull {
+                val availableSeats = mapOnlyWithAvailableSeats(it)
+                MovieShowtimesWithSeatsDto(it, availableSeats)
+            }
         }
+        return emptyList()
     }
 
 
@@ -117,12 +120,12 @@ class MovieService(
     private fun filterToExcludeAlreadyIn(
         entityList: List<MovieShowtimesEntity>,
         today: LocalDate
-    ): List<MovieShowtimesEntity> {
+    ): List<MovieShowtimesEntity>? {
         val existingShowtimes = movieShowtimesEntityService.findByDate(today)
 
         val filteredEntityList = entityList.filterNot { newShowtime ->
-            existingShowtimes.any { it ->
-                newShowtime.startTime == it.startTime && newShowtime.title == it.title }
+            existingShowtimes?.any { it ->
+                newShowtime.startTime == it.startTime && newShowtime.title == it.title } ?: false
         }
 
         return filteredEntityList

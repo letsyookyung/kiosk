@@ -9,5 +9,5 @@ import java.time.LocalDateTime
 interface CardTopUpHistoryRepository : JpaRepository<CardTopUpHistoryEntity, Long> {
 
     @Query("SELECT SUM(c.amount) FROM CardTopUpHistoryEntity c WHERE c.createdAt BETWEEN :start AND :end")
-    fun getTotalTopUpAmountByDate(start: LocalDateTime, end: LocalDateTime ): Int
+    fun getTotalTopUpAmountByDate(start: LocalDateTime, end: LocalDateTime ): Int?
 }

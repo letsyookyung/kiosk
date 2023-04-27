@@ -7,7 +7,7 @@ import java.time.LocalTime
 
 interface MovieShowtimesRepository : JpaRepository<MovieShowtimesEntity, Long> {
 
-    fun findByDate(today: LocalDate): List<MovieShowtimesEntity>
+    fun findByDate(today: LocalDate): List<MovieShowtimesEntity>?
 
     fun findByDateAndTitleAndStartTime(date: LocalDate, title: String, startTime: LocalTime?): MovieShowtimesEntity?
 

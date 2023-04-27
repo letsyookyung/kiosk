@@ -14,7 +14,7 @@ class MovieShowtimesEntityService(private val movieShowtimesRepository: MovieSho
             movieShowtimesRepository.save(movieShowtimesEntity) }
     }
 
-    fun findByDate(today: LocalDate): List<MovieShowtimesEntity> {
+    fun findByDate(today: LocalDate): List<MovieShowtimesEntity>? {
         return movieShowtimesRepository.findByDate(today)
     }
 
