@@ -4,8 +4,8 @@ import java.time.LocalDateTime
 
 data class CardDto(
     val id: Long? = 0,
-    val userId: Long?,
+    val userId: Long,
     val cardNumber: String,
-    val createdAt: LocalDateTime?,
-    val balance: Int? = 0
-    )
+    val createdAt: LocalDateTime? = LocalDateTime.now(),
+    val balance: Int? = 0,
+)

@@ -1,5 +1,6 @@
 package com.ivy.kiosk.controller.user.card
 
+import com.ivy.kiosk.dto.user.card.CardDto
 import com.ivy.kiosk.mapper.user.UserMapper
 import com.ivy.kiosk.mapper.user.card.CardMapper
 import com.ivy.kiosk.mapper.user.card.CardTopUpHistoryMapper
@@ -11,6 +12,7 @@ import com.ivy.kiosk.model.user.UserInfoModel
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/v1/user")
@@ -30,11 +32,11 @@ class CardController(
 
         val cardNumber = cardService.createUniqueCardNumber()
 
-         val cardEntity = user?.let{
-            userService.updateCardNumber(it.id!!, cardNumber)
-            cardService.addNewCard(cardMapper.toDto(user.id!!, cardNumber))
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(cardEntity?.cardNumber)
+        userService.updateCardNumber(user?.id!!, cardNumber)
+
+        cardService.addNewCard(CardDto( null, user?.id!!, cardNumber, LocalDateTime.now(), 0))
+
+        return ResponseEntity.status(HttpStatus.OK).body(cardNumber)
     }
 
     @PostMapping("/card/money")
@@ -51,11 +53,9 @@ class CardController(
 
         cardTopUpHistoryService.addCardTopUpHistory(topUpAmountDto)
 
-        return if (cardService.updateBalance(topUpAmountModel.cardNumber, topUpAmountModel.amount) >= 1) {
-            ResponseEntity.status(HttpStatus.OK).body("success")
-        } else {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("변경된 것이 없음")
-        }
+        cardService.updateBalance(topUpAmountModel.cardNumber, topUpAmountModel.amount)
+
+        return ResponseEntity.status(HttpStatus.OK).body("success")
 
     }
 
@@ -73,6 +73,10 @@ class CardController(
     fun findCardNumber(@RequestParam name: String, @RequestParam password: String): ResponseEntity<String> {
         val userDto = userMapper.toDto(name, password)
         val user = userService.getUserIdIfValidPassword(userDto)
+
+        if (user?.cardNumber == null) {
+            throw IllegalArgumentException("카드를 발급 받으신 후 이용하세요.")
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(user?.cardNumber)
     }
