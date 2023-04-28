@@ -76,7 +76,7 @@ class MovieController(
     @PostMapping("/ticket")
     fun bookTicket(@RequestBody @Valid movieBookingRequestModel: MovieBookingRequestModel): ResponseEntity<String> {
         try {
-            if (!userService.isValidCardToUse(movieBookingRequestModel.cardNumber, movieBookingRequestModel.password)) {
+            if (!userService.isCardValidToUse(movieBookingRequestModel.cardNumber, movieBookingRequestModel.password)) {
                 logger.error("비밀번호가 일치하지 않습니다.")
                 throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
             }

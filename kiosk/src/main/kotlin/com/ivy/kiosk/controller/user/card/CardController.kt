@@ -1,6 +1,5 @@
 package com.ivy.kiosk.controller.user.card
 
-import com.ivy.kiosk.controller.movie.MovieController
 import com.ivy.kiosk.dto.user.card.CardDto
 import com.ivy.kiosk.mapper.user.UserMapper
 import com.ivy.kiosk.mapper.user.card.CardMapper
@@ -10,7 +9,6 @@ import com.ivy.kiosk.service.user.UserService
 import com.ivy.kiosk.service.user.card.CardService
 import com.ivy.kiosk.service.user.card.CardTopUpHistoryService
 import com.ivy.kiosk.model.user.UserInfoModel
-import lombok.extern.slf4j.Slf4j
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -29,7 +27,6 @@ class CardController(
 ) {
     val logger: Logger = LoggerFactory.getLogger(CardController::class.java)
 
-
     @PostMapping("/card/new")
     fun issueNewCard(@RequestBody userInfoModel: UserInfoModel): ResponseEntity<String> {
         val userDto = userMapper.toDto(userInfoModel)
@@ -44,13 +41,13 @@ class CardController(
         val message = "Card issued to user ${userInfoModel.name}. New card number: $cardNumber"
         logger.info(message)
 
-        return ResponseEntity.ok().body(cardNumber).also { logger.info("Response sent: $it") }
+        return ResponseEntity.ok().body(cardNumber)
     }
 
     @PostMapping("/card/money")
     fun topUpCardBalance(@RequestBody topUpAmountModel: TopUpAmountModel): ResponseEntity<String> {
         try {
-            if (!userService.isValidCardToUse(topUpAmountModel.cardNumber, topUpAmountModel.password)) {
+            if (!userService.isCardValidToUse(topUpAmountModel.cardNumber, topUpAmountModel.password)) {
                 throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
             }
 
@@ -66,7 +63,7 @@ class CardController(
 
             logger.info("Card {} was topped up by {} won", topUpAmountModel.cardNumber, topUpAmountModel.amount)
 
-            return ResponseEntity.ok("success").also { logger.info("Response sent: $it") }
+            return ResponseEntity.ok("success")
         } catch (e: Exception) {
             logger.error("{}: {}", topUpAmountModel.cardNumber, e.message)
             throw e
@@ -76,7 +73,7 @@ class CardController(
     @GetMapping("/card/balance")
     fun getMyBalance(@RequestParam cardNumber: String, @RequestParam password: String): ResponseEntity<Int> {
         try {
-            if (!userService.isValidCardToUse(cardNumber, password)) {
+            if (!userService.isCardValidToUse(cardNumber, password)) {
                 throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
             }
 
@@ -85,7 +82,7 @@ class CardController(
 
             logger.info("Card {} balance is {}", cardNumber, balance)
 
-            return ResponseEntity.ok(balance).also { logger.info("Response sent: $it") }
+            return ResponseEntity.ok(balance)
         } catch (e: Exception) {
             logger.error("{}: {}", cardNumber, e.message, e)
             throw e
@@ -102,7 +99,7 @@ class CardController(
                 throw IllegalArgumentException("카드를 발급 받으신 후 이용하세요.")
             }
 
-            return ResponseEntity.ok(user.cardNumber).also { logger.info("Response sent: $it") }
+            return ResponseEntity.ok(user.cardNumber)
         } catch (e: Exception) {
             logger.error("{}: {}", name, e.message)
             throw e

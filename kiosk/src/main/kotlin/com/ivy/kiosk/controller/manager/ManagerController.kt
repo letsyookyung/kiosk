@@ -35,7 +35,7 @@ class ManagerController(
                 "총 매출 금액" to results[2]
             )
 
-            return ResponseEntity.ok(responseBody).also { logger.info("Response sent: $it") }
+            return ResponseEntity.ok(responseBody)
         } catch (e: Exception) {
             logger.error("{}: {}", date, e.message)
             throw e

@@ -12,14 +12,17 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@Slf4j
+
 @RestController
 @RequestMapping("/v1/user")
 class UserController(
     private val userService: UserService,
     private val userMapper: UserMapper,
 ) {
-    val logger: Logger = LoggerFactory.getLogger(UserController::class.java)
+
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(UserController::class.java)
+    }
 
     @PostMapping("/new")
     fun signUpForNewUser(@RequestBody userInfoModel: UserInfoModel): ResponseEntity<String> {
@@ -30,7 +33,7 @@ class UserController(
 
             logger.info("New user {} added", userInfoModel.name)
 
-            return ResponseEntity.ok("success").also { logger.info("Response sent: $it") }
+            return ResponseEntity.ok("success")
         } catch (e: Exception) {
             logger.error("{}: {}", userInfoModel.name, e.message)
             throw e
