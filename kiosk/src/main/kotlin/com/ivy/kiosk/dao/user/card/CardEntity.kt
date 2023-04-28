@@ -1,7 +1,5 @@
 package com.ivy.kiosk.dao.user.card
 
-import com.ivy.kiosk.dto.user.card.CardDto
-import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -23,16 +21,6 @@ class CardEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    var id: Long? = 0
 
-//    companion object {
-//        fun fromDto(dto: CardDto): CardEntity {
-//            val entity = CardEntity()
-//            entity.userId = dto.userId
-//            entity.cardNumber = dto.cardNumber
-//            entity.createdAt = dto.createdAt ?: LocalDateTime.now()
-//            entity.balance = dto.balance ?: 0
-//            return entity
-//        }
-//    }
 }

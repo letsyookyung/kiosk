@@ -24,7 +24,7 @@ class MovieEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    var id: Long? = 0
 }
 
 

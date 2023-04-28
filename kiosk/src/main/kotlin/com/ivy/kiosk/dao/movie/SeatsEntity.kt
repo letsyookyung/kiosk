@@ -6,14 +6,14 @@ import javax.persistence.*
 @Table(name = "seats_history")
 class SeatsEntity {
 
-    @Column(nullable = true)
-    var showtimesId: Long? = null
+    @Column(nullable = false)
+    var showtimesId: Long? = 0
 
-    @Column(nullable = true)
-    var seatNumber: String? = null
+    @Column(nullable = false)
+    var seatNumber: String? = ""
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    var id: Long? = 0
 
 }
