@@ -23,14 +23,6 @@ spring:
       use_sql_comments: true
       ddl-auto: update # create, update, validate
 
-logging:
-  level:
-    root: info
-    com.ivy: debug
-    org.hibernate:
-      type.descriptor.sql: trace #show parameter binding
-      SQL: DEBUG
-
 springdoc:
   swagger-ui:
     tryItOutEnabled: true
@@ -38,3 +30,9 @@ springdoc:
     tagsSorter: alpha
     operationsSorter: alpha
     path: /swagger-ui
+
+
+#logging:
+#  level:
+#    com.ivy.kiosk.controller.user.UserController: INFO
+#    com.ivy.kiosk.controller.user.card.CardController: INFO

@@ -15,7 +15,7 @@ class ManagerService(
     fun getDailySales(date: LocalDate): List<Int?> {
         val cardTopUpAmount = cardTopUpHistoryService.getTotalTopUpAmountByDate(date) ?: 0
         val ticketSalesAmount = ticketSalesEntityService.getTotalSalesByDate(date) ?: 0
-        val totalAmount = (cardTopUpAmount ?: 0) + (ticketSalesAmount ?: 0)
+        val totalAmount = (cardTopUpAmount) + (ticketSalesAmount)
 
         return listOf(cardTopUpAmount, ticketSalesAmount, totalAmount)
     }

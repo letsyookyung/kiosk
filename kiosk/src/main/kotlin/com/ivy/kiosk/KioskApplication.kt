@@ -9,11 +9,7 @@ import java.io.File
 class KioskApplication
 
 fun main(args: Array<String>) {
-    runApplication<KioskApplication>(*args)
 
-    val logsDirectory = File("./src/main/resources/logs")
-    if (!logsDirectory.exists()) {
-        logsDirectory.mkdir()
-    }
+    runApplication<KioskApplication>(*args)
 
 }
