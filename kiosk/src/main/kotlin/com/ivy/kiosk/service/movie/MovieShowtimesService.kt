@@ -31,8 +31,6 @@ class MovieShowtimesService(
 
         val filteredEntityList = filterToExcludeAlreadyIn(entityList, today)
 
-        movieShowtimesEntityService.addDailyShowtimes(filteredEntityList)
-
         return movieShowtimesEntityService.addDailyShowtimes(filteredEntityList).map { movieShowtimesEntity -> movieMapper.toDto(movieShowtimesEntity) }
 
     }

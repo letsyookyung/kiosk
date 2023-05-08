@@ -13,7 +13,7 @@ class MovieService(
     private val movieMapper: MovieMapper,
     private val movieEntityService: MovieEntityService,
 ) {
-    fun add(movieDtoList: List<MovieDto>): List<MovieDto> {
+    fun addMovie(movieDtoList: List<MovieDto>): List<MovieDto> {
         val movieEntityList = movieDtoList.map { movie -> movieMapper.toEntity(movie) }
         return movieEntityService.add(movieEntityList).map { movieEntity -> movieMapper.toDto(movieEntity) }
     }

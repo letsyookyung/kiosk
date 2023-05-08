@@ -39,11 +39,11 @@ class MovieController(
     fun addMovies(@RequestBody movieList: List<MovieRequestModel>): ResponseEntity<List<MovieDto>> {
         val movieDtoList = movieList.map { movie -> movieMapper.toDto(movie) }
         logger.info("Request received to add {} movies", movieList.size)
-
-        return ResponseEntity.status(HttpStatus.OK).body(movieService.add(movieDtoList))
+        val result = movieService.addMovie(movieDtoList)
+        return ResponseEntity.status(HttpStatus.OK).body(result)
     }
 
-    @PostMapping("/daily-showtimes")
+    @PostMapping("/generate-daily-showtimes")
     fun generateDailyShowtimes(
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         @RequestParam date: LocalDate
@@ -64,7 +64,7 @@ class MovieController(
     fun getShowtimesWithSeats(
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         @PathVariable date: LocalDate
-    ): ResponseEntity<List<MovieShowtimesWithSeatsDto>> {
+    ): ResponseEntity<List<MovieShowtimesWithSeatsDto>> { // 정리해서 보내기
         val showtimesWithSeats = movieShowtimesService.getShowtimesWithSeats(date)
         return if (showtimesWithSeats.isEmpty()) {
             ResponseEntity.ok(emptyList())
@@ -76,20 +76,18 @@ class MovieController(
     @PostMapping("/ticket")
     fun bookTicket(@RequestBody @Valid movieBookingRequestModel: MovieBookingRequestModel): ResponseEntity<String> {
         try {
-            if (!userService.isCardValidToUse(movieBookingRequestModel.cardNumber, movieBookingRequestModel.password)) {
-                logger.error("비밀번호가 일치하지 않습니다.")
-                throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
-            }
+            val cardDto = cardService.findByCardNumber(movieBookingRequestModel.cardNumber)
 
-            val balance = cardService.getMyBalance(movieBookingRequestModel.cardNumber)?.balance
-                ?: throw IllegalArgumentException("카드 정보를 찾을 수 없습니다.")
+            userService.isValidPassword(cardDto.userId, movieBookingRequestModel.password)
 
             val movieFromShowtimes = movieShowtimesService.getMovieByDateAndTitleAndStartTime(movieMapper.toDto(movieBookingRequestModel))
                 ?: throw IllegalArgumentException("입력하신 영화가 존재하지 않습니다.")
 
-            balance.let {
-                if (it <= movieFromShowtimes.price!!) {
-                    throw InsufficientBalanceException("카드 잔액이 부족합니다. 충전 후 이용하십시오.")
+            cardDto.balance.let {
+                if (it != null) {
+                    if (it <= movieFromShowtimes.price!!) {
+                        throw InsufficientBalanceException("카드 잔액이 부족합니다. 충전 후 이용하십시오.")
+                    }
                 }
             }
 

@@ -1,9 +1,7 @@
 package com.ivy.kiosk.controller.user.card
 
 import com.ivy.kiosk.dto.user.card.CardDto
-import com.ivy.kiosk.dto.user.card.NewCardDto
 import com.ivy.kiosk.mapper.user.UserMapper
-import com.ivy.kiosk.mapper.user.card.CardMapper
 import com.ivy.kiosk.mapper.user.card.CardTopUpHistoryMapper
 import com.ivy.kiosk.model.user.card.TopUpAmountModel
 import com.ivy.kiosk.service.user.UserService
@@ -34,7 +32,7 @@ class CardController(
 
         val cardNumber = cardService.createUniqueCardNumber()
 
-        cardService.issueNewCard(NewCardDto(user.id!!, cardNumber))
+        cardService.addCard(CardDto(null, user.id!!, cardNumber, LocalDateTime.now(), 0))
 
         val message = "Card issued to user ${userInfoModel.name}. New card number: $cardNumber"
         logger.info(message)
@@ -45,9 +43,9 @@ class CardController(
     @PostMapping("/card/money")
     fun topUpCardBalance(@RequestBody topUpAmountModel: TopUpAmountModel): ResponseEntity<String> {
         try {
-            if (!userService.isCardValidToUse(topUpAmountModel.cardNumber, topUpAmountModel.password)) {
-                throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
-            }
+            val cardDto = cardService.findByCardNumber(topUpAmountModel.cardNumber)
+
+            userService.isValidPassword(cardDto.userId, topUpAmountModel.password)
 
             if (topUpAmountModel.amount % 50000 != 0 || topUpAmountModel.amount < 50000) {
                 throw IllegalArgumentException("5만원 단위로 충전이 가능합니다.")
@@ -69,16 +67,13 @@ class CardController(
     @GetMapping("/card/balance")
     fun getMyBalance(@RequestParam cardNumber: String, @RequestParam password: String): ResponseEntity<Int> {
         try {
-            if (!userService.isCardValidToUse(cardNumber, password)) {
-                throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
-            }
+            val cardDto = cardService.findByCardNumber(cardNumber)
 
-            val balance = cardService.getMyBalance(cardNumber)?.balance
-                ?: throw IllegalArgumentException("카드 정보를 찾을 수 없습니다.")
+            userService.isValidPassword(cardDto.userId, password)
 
-            logger.info("Card {} balance is {}", cardNumber, balance)
+            logger.info("Card {} balance is {}", cardNumber, cardDto.balance)
 
-            return ResponseEntity.ok(balance)
+            return ResponseEntity.ok(cardDto.balance)
         } catch (e: Exception) {
             logger.error("{}: {}", cardNumber, e.message, e)
             throw e
@@ -91,11 +86,9 @@ class CardController(
             val userDto = userMapper.toDto(name, password)
             val user = userMapper.toDto(userService.getUserIdIfValidPassword(userDto))
 
-            if (user?.cardNumber == null) {
-                throw IllegalArgumentException("카드를 발급 받으신 후 이용하세요.")
-            }
+            cardService.findByUserId(user.id!!)
 
-            return ResponseEntity.ok(user.cardNumber)
+            return ResponseEntity.ok(cardService.findByUserId(user.id!!).cardNumber)
         } catch (e: Exception) {
             logger.error("{}: {}", name, e.message)
             throw e

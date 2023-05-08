@@ -6,6 +6,7 @@ import com.ivy.kiosk.mapper.user.UserMapper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class UserService(
@@ -22,26 +23,19 @@ class UserService(
         }
     }
 
+    fun isValidPassword(userId: Long, password: String){
+        val user = userEntityService.findById(userId)
+            .orElseThrow { IllegalArgumentException("해당 카드번호를 가진 사용자가 존재하지 않습니다.") }
+        require(user.password == password) { "입력하신 비밀번호가 틀렸습니다." }
+    }
+
     fun getUserIdIfValidPassword(userDto: UserDto): UserEntity {
-        val user = getUserEntity(userDto)
-        require(user.password == userDto.password) { "입력하신 비밀번호가 틀렸습니다." }
-        return user
-    }
-
-    fun updateCardNumber(userId: Long, cardNumber: String) {
-        userEntityService.updateCardNumber(userId, cardNumber).also {
-            logger.info("Updated card number of User (ID: {}): {}", userId, cardNumber)
-        }
-    }
-
-    fun isCardValidToUse(cardNumber: String, password: String): Boolean {
-        val user = userEntityService.findByCardNumber(cardNumber) ?: return false
-        return user.password == password
-    }
-
-    private fun getUserEntity(userDto: UserDto): UserEntity {
-        return userEntityService.findByName(userMapper.toEntity(userDto))
+        val user = userEntityService.findByName(userMapper.toEntity(userDto))
             ?: throw IllegalArgumentException("입력하신 이름의 고객은 없습니다.")
+
+        require(user.password == userDto.password) { "입력하신 비밀번호가 틀렸습니다." }
+
+        return user
     }
 
 }

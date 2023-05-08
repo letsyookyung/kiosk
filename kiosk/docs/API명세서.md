@@ -85,7 +85,7 @@
    
 
 7. 원하는 날마다 영화 상영표 생성 api
-    - url path: GET /v1/movie/daily-showtimes
+    - url path: GET /v1/movie/generate-daily-showtimes
     - request:
       - date, LocalDate
     - response:
@@ -97,7 +97,7 @@
 
 
 8. 영화 상영표 확인 api
-    - url path: GET /v1/movie/showtimes/date
+    - url path: GET /v1/movie/showtimes/{date}
     - request:
         1. date, LocalDate
     - response:
