@@ -4,6 +4,7 @@ import com.ivy.kiosk.dao.movie.TicketSalesEntity
 import com.ivy.kiosk.repository.movie.TicketSalesRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 @Service
@@ -15,10 +16,8 @@ class TicketSalesEntityService(
         return ticketSalesRepository.save(ticketSalesEntity)
     }
 
-    fun getTotalSalesByDate(date: LocalDate): Int? {
-        val startDateTime = date.atStartOfDay()
-        val endDateTime = startDateTime.plusDays(1).minusSeconds(1)
-        return ticketSalesRepository.getTotalSalesByDate(startDateTime, endDateTime)
+    fun getTotalSalesByDate(start: LocalDateTime, end: LocalDateTime): Int? {
+        return ticketSalesRepository.getTotalSalesByDate(start, end)
     }
 
 

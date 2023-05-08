@@ -22,13 +22,17 @@ abstract class MovieMapper {
 
     abstract fun toDto(model: MovieRequestModel): MovieDto
 
-    abstract fun toDto(date: LocalDate, entity: MovieEntity): MovieShowtimesDto
+    abstract fun toDto(date: LocalDate, dto: MovieDto): MovieShowtimesDto
 
     abstract fun toDto(model: MovieBookingRequestModel): MovieShowtimesDto
 
     abstract fun toDto(showtimesId: Long, cardNumber: String): TicketSalesDto
 
-    abstract fun toDto(showtimesId: Long, model: MovieBookingRequestModel): SeatsDto
+    abstract fun toDto(movieEntity: MovieEntity): MovieDto
+
+    abstract fun toDto(movieShowtimesEntity: MovieShowtimesEntity): MovieShowtimesDto
+
+    abstract fun toDto(ticketSalesEntity: TicketSalesEntity): TicketSalesDto
 
     abstract fun toEntity(dto: MovieDto): MovieEntity
 
@@ -37,7 +41,7 @@ abstract class MovieMapper {
     abstract fun toEntity(dto: TicketSalesDto): TicketSalesEntity
 
     abstract fun toEntity(dto: SeatsDto): SeatsEntity
-    fun createShowtimesDto(runningMovieList: List<MovieEntity>, date: LocalDate): List<MovieShowtimesDto> {
+    fun toDto(runningMovieList: List<MovieDto>, date: LocalDate): List<MovieShowtimesDto> {
         return runningMovieList.map { movie -> toDto(date, movie) }
     }
 

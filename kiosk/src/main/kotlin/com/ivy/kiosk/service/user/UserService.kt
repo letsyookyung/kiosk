@@ -16,8 +16,8 @@ class UserService(
         private val logger: Logger = LoggerFactory.getLogger(UserService::class.java)
     }
 
-    fun add(userDto: UserDto) {
-        userEntityService.add(userMapper.toEntity(userDto)).also {
+    fun addUser(userDto: UserDto): UserEntity {
+        return userEntityService.add(userMapper.toEntity(userDto)).also {
             logger.info("Add User: {}", it)
         }
     }

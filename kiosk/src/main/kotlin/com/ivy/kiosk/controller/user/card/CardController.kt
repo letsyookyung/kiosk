@@ -1,6 +1,7 @@
 package com.ivy.kiosk.controller.user.card
 
 import com.ivy.kiosk.dto.user.card.CardDto
+import com.ivy.kiosk.dto.user.card.NewCardDto
 import com.ivy.kiosk.mapper.user.UserMapper
 import com.ivy.kiosk.mapper.user.card.CardMapper
 import com.ivy.kiosk.mapper.user.card.CardTopUpHistoryMapper
@@ -21,7 +22,6 @@ class CardController(
     private val userService: UserService,
     private val userMapper: UserMapper,
     private val cardService: CardService,
-    private val cardMapper: CardMapper,
     private val cardTopUpHistoryMapper: CardTopUpHistoryMapper,
     private val cardTopUpHistoryService: CardTopUpHistoryService,
 ) {
@@ -34,9 +34,7 @@ class CardController(
 
         val cardNumber = cardService.createUniqueCardNumber()
 
-        userService.updateCardNumber(user?.id!!, cardNumber)
-
-        cardService.addNewCard(CardDto(null, user?.id!!, cardNumber, LocalDateTime.now(), 0))
+        cardService.issueNewCard(NewCardDto(user.id!!, cardNumber))
 
         val message = "Card issued to user ${userInfoModel.name}. New card number: $cardNumber"
         logger.info(message)
@@ -58,8 +56,6 @@ class CardController(
             val topUpAmountDto = cardTopUpHistoryMapper.toDto(topUpAmountModel)
 
             cardTopUpHistoryService.addCardTopUpHistory(topUpAmountDto)
-
-            cardService.updateBalance(topUpAmountModel.cardNumber, topUpAmountModel.amount)
 
             logger.info("Card {} was topped up by {} won", topUpAmountModel.cardNumber, topUpAmountModel.amount)
 
@@ -93,7 +89,7 @@ class CardController(
     fun findCardNumber(@RequestParam name: String, @RequestParam password: String): ResponseEntity<String> {
         try {
             val userDto = userMapper.toDto(name, password)
-            val user = userService.getUserIdIfValidPassword(userDto)
+            val user = userMapper.toDto(userService.getUserIdIfValidPassword(userDto))
 
             if (user?.cardNumber == null) {
                 throw IllegalArgumentException("카드를 발급 받으신 후 이용하세요.")

@@ -13,6 +13,8 @@ abstract class CardTopUpHistoryMapper {
 
     abstract fun toDto(model: TopUpAmountModel): TopUpAmountDto
 
+    abstract fun toDto(dto: CardTopUpHistoryEntity): TopUpAmountDto
+
     abstract fun toEntity(dto: TopUpAmountDto): CardTopUpHistoryEntity
 
 }

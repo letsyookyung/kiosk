@@ -3,7 +3,6 @@ package com.ivy.kiosk.dto.movie
 import com.ivy.kiosk.dao.movie.MovieShowtimesType
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
 data class MovieShowtimesDto(

@@ -26,10 +26,10 @@ class UserController(
 
     @PostMapping("/new")
     fun signUpForNewUser(@RequestBody userInfoModel: UserInfoModel): ResponseEntity<String> {
-        logger.trace("start")
+
         try {
             val userDto = userMapper.toDto(userInfoModel)
-            userService.add(userDto)
+            userService.addUser(userDto)
 
             logger.info("New user {} added", userInfoModel.name)
 

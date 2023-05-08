@@ -8,17 +8,20 @@ import java.time.LocalDate
 
 @Service
 class CardTopUpHistoryService(
+    private val cardService: CardService,
     private val cardTopUpHistoryMapper: CardTopUpHistoryMapper,
     private val cardTopUpHistoryEntityService: CardTopUpHistoryEntityService,
 ) {
 
-    fun addCardTopUpHistory(topUpAmountDto: TopUpAmountDto): CardTopUpHistoryEntity? {
+    fun addCardTopUpHistory(topUpAmountDto: TopUpAmountDto): TopUpAmountDto {
+        cardService.updateBalance(topUpAmountDto.cardNumber, topUpAmountDto.amount!!)
         val cardTopUpHistoryEntity = cardTopUpHistoryMapper.toEntity(topUpAmountDto)
-        return cardTopUpHistoryEntityService.add(cardTopUpHistoryEntity)
+        return cardTopUpHistoryMapper.toDto(cardTopUpHistoryEntityService.add(cardTopUpHistoryEntity))
 
     }
 
     fun getTotalTopUpAmountByDate(date: LocalDate): Int? {
         return cardTopUpHistoryEntityService.getTotalTopUpAmountByDate(date)
     }
+
 }
