@@ -1,21 +1,10 @@
 <configuration>
     <property name="LOG_DIR" value="./logs"/>
-    <property name="ROOT_LOG_FILE" value="${LOG_DIR}/root.log"/>
-    <property name="API_LOG_FILE" value="${LOG_DIR}/api.log"/>
+    <property name="API_LOG_FILE" value="${LOG_DIR}/kiosk.log"/>
 
-<!--    <Appenders>-->
-<!--        <Console name="CONSOLE" target="System.out">-->
-<!--            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>-->
-<!--        </Console>-->
-
-    <appender name="ROOT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${ROOT_LOG_FILE}</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DIR}/root.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -30,9 +19,9 @@
         </encoder>
     </appender>
 
-    <logger name="root" level="INFO">
-        <appender-ref ref="ROOT"/>
-    </logger>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
 
     <logger name="com.ivy.kiosk.controller.user.UserController" level="INFO">
         <appender-ref ref="KIOSK"/>
@@ -58,8 +47,5 @@
         <appender-ref ref="KIOSK"/>
     </logger>
 
-    <root level="INFO">
-        <appender-ref ref="ROOT"/>
-    </root>
 
 </configuration>
