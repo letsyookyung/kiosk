@@ -7,7 +7,7 @@ import kotlin.math.roundToInt
 
 data class MovieShowtimesDto(
     val id: Long? = 0,
-    val date: LocalDate,
+    var date: LocalDate,
     val title: String,
     var startTime: LocalTime?,
     val endTime: LocalTime?,

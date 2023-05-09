@@ -1,19 +1,10 @@
 package com.ivy.kiosk.service.user.card
 
 
-import com.ivy.kiosk.dao.user.UserEntity
-import com.ivy.kiosk.dao.user.card.CardEntity
 import com.ivy.kiosk.dto.user.card.CardDto
-import com.ivy.kiosk.dto.user.card.NewCardDto
-import com.ivy.kiosk.dto.user.card.TopUpAmountDto
-import com.ivy.kiosk.mapper.user.UserMapper
 import com.ivy.kiosk.mapper.user.card.CardMapper
-import com.ivy.kiosk.mapper.user.card.CardTopUpHistoryMapper
 import com.ivy.kiosk.service.user.UserEntityService
-import com.ivy.kiosk.service.user.UserService
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
 import kotlin.math.pow
 import kotlin.random.Random
 
@@ -42,11 +33,17 @@ class CardService(
     }
 
 
-    fun findByUserId(userId: Long): CardDto {
+    fun findByUserIdForFindingCardNumber(userId: Long): CardDto {
         if (cardEntityService.findByUserId(userId) == null) {
             throw IllegalArgumentException("카드를 발급하신 후 사용하십시오.")
         } else {
             return cardMapper.toDto(cardEntityService.findByUserId(userId)!!)
+        }
+    }
+
+    fun findByUserIdForIssuingCard(userId: Long) {
+        if (cardEntityService.findByUserId(userId) != null) {
+            throw IllegalArgumentException("이미 카드를 발급 받으셨습니다.")
         }
     }
 
