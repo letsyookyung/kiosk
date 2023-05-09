@@ -97,9 +97,8 @@ class MovieShowtimesService(
         }.toMutableList()
 
         val occupiedSeats = seatsEntityService.findSeatsByShowtimesId(movieShowtimesEntity.id!!)
-        val availableSeats = totalSeats - occupiedSeats
 
-        return availableSeats
+        return totalSeats - occupiedSeats.toSet()
     }
 
 }

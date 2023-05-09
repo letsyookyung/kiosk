@@ -35,7 +35,7 @@ class UserController(
 
             return ResponseEntity.ok("success")
         } catch (e: Exception) {
-            logger.error("{}: {}", userInfoModel.name, e.message)
+            logger.error("{}: {}", userInfoModel.name, e.message, e)
             throw e
         }
     }

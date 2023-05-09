@@ -4,6 +4,8 @@ import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.RequestParam
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import javax.validation.constraints.Pattern
 
 data class MovieBookingRequestModel(
@@ -12,7 +14,7 @@ data class MovieBookingRequestModel(
 
     val password: String,
 
-    val date: LocalDate,
+    var date: LocalDate,
 
     val title: String,
 

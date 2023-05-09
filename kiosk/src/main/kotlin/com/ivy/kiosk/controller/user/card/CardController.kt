@@ -27,17 +27,24 @@ class CardController(
 
     @PostMapping("/card/new")
     fun issueNewCard(@RequestBody userInfoModel: UserInfoModel): ResponseEntity<String> {
-        val userDto = userMapper.toDto(userInfoModel)
-        val user = userService.getUserIdIfValidPassword(userDto)
+        try {
+            val userDto = userMapper.toDto(userInfoModel)
+            val user = userService.getUserIdIfValidPassword(userDto)
 
-        val cardNumber = cardService.createUniqueCardNumber()
+            cardService.findByUserIdForIssuingCard(user.id!!)
 
-        cardService.addCard(CardDto(null, user.id!!, cardNumber, LocalDateTime.now(), 0))
+            val cardNumber = cardService.createUniqueCardNumber()
 
-        val message = "Card issued to user ${userInfoModel.name}. New card number: $cardNumber"
-        logger.info(message)
+            cardService.addCard(CardDto(null, user.id!!, cardNumber, LocalDateTime.now(), 0))
 
-        return ResponseEntity.ok().body(cardNumber)
+            val message = "Card issued to user ${userInfoModel.name}. New card number: $cardNumber"
+            logger.info(message)
+
+            return ResponseEntity.ok().body(cardNumber)
+        } catch (e: Exception) {
+            logger.error("{}: {}", userInfoModel.name, e.message, e)
+            throw e
+        }
     }
 
     @PostMapping("/card/money")
@@ -59,7 +66,7 @@ class CardController(
 
             return ResponseEntity.ok("success")
         } catch (e: Exception) {
-            logger.error("{}: {}", topUpAmountModel.cardNumber, e.message)
+            logger.error("{}: {}", topUpAmountModel.cardNumber, e.message, e)
             throw e
         }
     }
@@ -86,11 +93,11 @@ class CardController(
             val userDto = userMapper.toDto(name, password)
             val user = userMapper.toDto(userService.getUserIdIfValidPassword(userDto))
 
-            cardService.findByUserId(user.id!!)
+            val cardDto = cardService.findByUserIdForFindingCardNumber(user.id!!)
 
-            return ResponseEntity.ok(cardService.findByUserId(user.id!!).cardNumber)
+            return ResponseEntity.ok(cardDto.cardNumber)
         } catch (e: Exception) {
-            logger.error("{}: {}", name, e.message)
+            logger.error("{}: {}", name, e.message, e)
             throw e
         }
     }

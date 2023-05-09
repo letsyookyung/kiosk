@@ -19,14 +19,14 @@ class UserService(
 
     fun addUser(userDto: UserDto): UserEntity {
         return userEntityService.add(userMapper.toEntity(userDto)).also {
-            logger.info("Add User: {}", it)
         }
     }
 
-    fun isValidPassword(userId: Long, password: String){
+    fun isValidPassword(userId: Long, password: String) {
         val user = userEntityService.findById(userId)
             .orElseThrow { IllegalArgumentException("해당 카드번호를 가진 사용자가 존재하지 않습니다.") }
         require(user.password == password) { "입력하신 비밀번호가 틀렸습니다." }
+
     }
 
     fun getUserIdIfValidPassword(userDto: UserDto): UserEntity {
