@@ -23,8 +23,12 @@ class UserEntityService(private val userRepository: UserRepository) {
         return userRepository.findById(id)
     }
 
-    fun existsByCardNumber(cardNumber: String): Boolean{
+    fun existsByCardNumber(cardNumber: String): Boolean {
         return userRepository.existsByCardNumber(cardNumber)
+    }
+
+    fun existsByName(name: String): Boolean {
+        return userRepository.existsByName(name)
     }
 
 

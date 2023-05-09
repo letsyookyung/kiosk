@@ -17,10 +17,10 @@ import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 import javax.validation.Valid
+import java.util.regex.Pattern
 
 @RestController
 @RequestMapping("/v1/movie")
@@ -55,7 +55,8 @@ class MovieController(
             ResponseEntity.ok(emptyList())
         } else {
             val movieShowtimesDtoList = movieMapper.toDto(runningMovieList, date)
-            val generatedMovieShowtimesDtoList = movieShowtimesService.generateDailyShowtimes(movieShowtimesDtoList, date)
+            val generatedMovieShowtimesDtoList =
+                movieShowtimesService.generateDailyShowtimes(movieShowtimesDtoList, date)
             ResponseEntity.ok(generatedMovieShowtimesDtoList)
         }
     }
@@ -80,14 +81,21 @@ class MovieController(
 
             userService.isValidPassword(cardDto.userId, movieBookingRequestModel.password)
 
-            val movieFromShowtimes = movieShowtimesService.getMovieByDateAndTitleAndStartTime(movieMapper.toDto(movieBookingRequestModel))
-                ?: throw IllegalArgumentException("입력하신 영화가 존재하지 않습니다.")
+            val movieFromShowtimes =
+                movieShowtimesService.getMovieByDateAndTitleAndStartTime(movieMapper.toDto(movieBookingRequestModel))
+                    ?: throw IllegalArgumentException("입력하신 영화가 존재하지 않습니다.")
 
-            cardDto.balance.let {
-                if (it != null) {
-                    if (it <= movieFromShowtimes.price!!) {
-                        throw InsufficientBalanceException("카드 잔액이 부족합니다. 충전 후 이용하십시오.")
-                    }
+            if (!isValidSeatNumber(movieBookingRequestModel.seatNumber)) {
+                throw IllegalArgumentException("좌석 번호의 형식을 맞춰주세요.")
+            }
+
+            if (seatsService.isAlreadyTakenSeat(movieFromShowtimes.id!!, movieBookingRequestModel.seatNumber)) {
+                throw IllegalArgumentException("입력하신 좌석은 이미 예매되었습니다. 다른 좌석을 입력하십시오.")
+            }
+
+            if (cardDto.balance != null) {
+                if (cardDto.balance <= movieFromShowtimes.price!!) {
+                    throw InsufficientBalanceException("카드 잔액이 부족합니다. 충전 후 이용하십시오.")
                 }
             }
 
@@ -100,7 +108,7 @@ class MovieController(
                 )
             )
 
-             val result = """
+            val result = """
              ${movieBookingRequestModel.date} ${movieBookingRequestModel.startTime} ${movieBookingRequestModel.title} 
              ${movieBookingRequestModel.seatNumber} 예약 완료 되었습니다.""".trimIndent()
 
@@ -113,7 +121,16 @@ class MovieController(
         }
     }
 
+    private fun isValidSeatNumber(seatNumber: String): Boolean {
+        val pattern = Pattern.compile("^[A-E]0?[1-9]$|^[A-E]10$")
+        val matcher = pattern.matcher(seatNumber)
+        return matcher.matches()
+    }
 
 }
+
+
+
+
 
 

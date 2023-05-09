@@ -15,6 +15,7 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
 
     fun existsByCardNumber(cardNumber: String): Boolean
 
+    fun existsByName(name: String): Boolean
 
     @Transactional
     @Modifying
