@@ -110,7 +110,7 @@ class MovieController(
 
             return ResponseEntity.ok(result)
         } catch (e: Exception) {
-            logger.error("{}: {}", movieBookingRequestModel, e.message)
+            logger.error("{}: {}", movieBookingRequestModel, e.message, e)
             throw e
         }
     }

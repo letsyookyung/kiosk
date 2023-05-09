@@ -37,7 +37,7 @@ class ManagerController(
 
             return ResponseEntity.ok(responseBody)
         } catch (e: Exception) {
-            logger.error("{}: {}", date, e.message)
+            logger.error("{}: {}", date, e.message, e)
             throw e
         }
     }
