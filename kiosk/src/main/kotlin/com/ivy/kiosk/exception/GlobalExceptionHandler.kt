@@ -10,7 +10,7 @@ import java.time.format.DateTimeParseException
 @ControllerAdvice
 class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException::class, InsufficientBalanceException::class)
-    fun handleIllegalArgument(ex: IllegalArgumentException): ResponseEntity<String> {
+    fun handleIllegalArgument(ex: Exception): ResponseEntity<String> {
         return ResponseEntity.badRequest().body(ex.message)
     }
 
