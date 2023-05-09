@@ -5,6 +5,7 @@ import com.ivy.kiosk.repository.user.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
@@ -18,17 +19,12 @@ class UserEntityService(private val userRepository: UserRepository) {
         return userEntity.name?.let { userRepository.findByName(it) }
     }
 
+    fun findById(id: Long): Optional<UserEntity> {
+        return userRepository.findById(id)
+    }
+
     fun existsByCardNumber(cardNumber: String): Boolean{
         return userRepository.existsByCardNumber(cardNumber)
-    }
-
-    fun updateCardNumber(id: Long, cardNumber: String) {
-        return userRepository.updateCardNumber(id, cardNumber)
-    }
-
-
-    fun findByCardNumber(cardNumber: String): UserEntity? {
-        return userRepository.findByCardNumber(cardNumber)
     }
 
 

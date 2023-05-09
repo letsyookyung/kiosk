@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional
 @Repository
 interface CardRepository : JpaRepository<CardEntity, Long> {
 
-    fun findByCardNumber(cardNumber: String): CardEntity
+    fun findByCardNumber(cardNumber: String): CardEntity?
+
+    fun findByUserId(userId: Long): CardEntity?
 
     @Transactional
     @Modifying
