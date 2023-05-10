@@ -13,10 +13,6 @@ class UserService(
     private val userEntityService: UserEntityService,
     private val userMapper: UserMapper,
 ) {
-    companion object {
-        private val logger: Logger = LoggerFactory.getLogger(UserService::class.java)
-    }
-
     fun addUser(userDto: UserDto): UserEntity {
         return userEntityService.add(userMapper.toEntity(userDto)).also {
         }
@@ -36,6 +32,10 @@ class UserService(
         require(user.password == userDto.password) { "입력하신 비밀번호가 틀렸습니다." }
 
         return user
+    }
+
+    fun isAlreadyExistingUser(name: String) {
+        require(!userEntityService.existsByName(name)) { "입력하신 이름은 이미 존재합니다, 다른 이름을 사용하세요."}
     }
 
 }

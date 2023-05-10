@@ -19,16 +19,17 @@ class UserController(
     private val userService: UserService,
     private val userMapper: UserMapper,
 ) {
-
     companion object {
         val logger: Logger = LoggerFactory.getLogger(UserController::class.java)
     }
 
     @PostMapping("/new")
     fun signUpForNewUser(@RequestBody userInfoModel: UserInfoModel): ResponseEntity<String> {
-
         try {
             val userDto = userMapper.toDto(userInfoModel)
+
+            userService.isAlreadyExistingUser(userDto.name)
+
             userService.addUser(userDto)
 
             logger.info("New user {} added", userInfoModel.name)
@@ -39,7 +40,6 @@ class UserController(
             throw e
         }
     }
-
 
 }
 
